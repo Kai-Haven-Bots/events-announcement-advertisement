@@ -44,3 +44,16 @@ export const removeEvent = async (data: {name: string}) => {
     }
 }
 
+export const getAllEvents = async () => {
+    try{
+
+        const events_model = await sequelize.model('events');
+        const all = (await events_model.findAll()).map(v => v.dataValues);
+
+        return all;
+    }catch(err: any){
+        console.log('Err at /services/eventServices.ts/addEvent()');
+        console.log(err);
+        throw new Error(err.message) 
+    }
+}
