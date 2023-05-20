@@ -38,7 +38,7 @@ export const removeEvent = async (data: {name: string}) => {
 
         return previous.dataValues;
     }catch(err: any){
-        console.log('Err at /services/eventServices.ts/addEvent()');
+        console.log('Err at /services/eventServices.ts/removeEvent()');
         console.log(err);
         throw new Error(err.message) 
     }
@@ -52,7 +52,7 @@ export const getAllEvents = async () => {
 
         return all;
     }catch(err: any){
-        console.log('Err at /services/eventServices.ts/addEvent()');
+        console.log('Err at /services/eventServices.ts/getAllEvents()');
         console.log(err);
         throw new Error(err.message) 
     }
