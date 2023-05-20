@@ -2,6 +2,8 @@ import { Client, EmbedBuilder, IntentsBitField} from 'discord.js';
 import * as path from 'path';
 import * as fs from 'fs';
 import { Sequelize } from 'sequelize';
+import { addEvent, getAllEvents } from './services/eventServices';
+import { getChannel, updateChannel } from './services/channelServices';
 
 require('dotenv').config({
     path: path.join(__dirname, ".env")

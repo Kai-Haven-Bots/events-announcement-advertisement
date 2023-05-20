@@ -1,7 +1,7 @@
 import { Sequelize, INTEGER, STRING, CHAR } from "sequelize";
 
 export const model = (sequelize: Sequelize) => {
-    sequelize.define('channel', {
+    sequelize.define('channels', {
         channelId: {
             type:   CHAR(25),
             allowNull: false
