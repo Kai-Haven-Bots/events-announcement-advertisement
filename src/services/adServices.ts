@@ -4,7 +4,7 @@ import { getChannel, updateChannel } from "./channelServices";
 
 export const createAd = async (events: any[]) => {
     try{        
-        const header = "**Events for today**\n";
+        const header = "**Events for today**\n\n";
 
         let eventsText = '';
         let i = 0;
@@ -18,7 +18,7 @@ export const createAd = async (events: any[]) => {
             eventsText += `${i}. **${name}** event at <#${channelId}> <t:${timeTemplate}:R> \n`
         }
 
-        const footer = "NITRO UP FOR GRABS";
+        const footer = "\nNITRO UP FOR GRABS";
 
         return events.length != 0 ? header + eventsText + footer : header + "*# No events listed for today :(*"
     }catch(err: any){
@@ -41,7 +41,7 @@ export const sendAd = async (channelId: string, ad: string, delay: number) => {
 
                 const previousAd = await channel.messages.fetch(msgId);
                 await previousAd.delete();
-                
+
             }else{
                 return;
             }
