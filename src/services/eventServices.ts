@@ -49,7 +49,7 @@ export const getAllEvents = async () => {
 
         const events_model = await sequelize.model('events');
         const all = (await events_model.findAll()).map(v => v.dataValues);
-
+        
         return all;
     }catch(err: any){
         console.log('Err at /services/eventServices.ts/getAllEvents()');

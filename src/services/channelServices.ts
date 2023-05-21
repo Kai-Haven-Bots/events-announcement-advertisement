@@ -23,7 +23,7 @@ export const updateChannel = async (body: {channelId: string, lastSentAt: number
     }
 }
 
-export const getChannel = async (channelId: string)=> {
+export const getChannel = async (channelId: string) => {
     try{
         const channels_model = sequelize.model('channels');
         const channel = await channels_model.findOne({
