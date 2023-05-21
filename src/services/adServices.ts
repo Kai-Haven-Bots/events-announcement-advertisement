@@ -1,6 +1,7 @@
 import { GuildTextBasedChannel } from "discord.js";
 import { client } from "..";
 import { getChannel, updateChannel } from "./channelServices";
+import { getAllEvents } from "./eventServices";
 
 export const createAd = async (events: any[]) => {
     try{        
@@ -58,4 +59,18 @@ export const sendAd = async (channelId: string, ad: string, delay: number) => {
         console.log(err);
         throw new Error(err.message);
     }
+}
+
+export const adScanner = () => {
+    setInterval(async () => {
+        const channelIds = (process.env._CHANNELS as string).split(" ");
+        const delay = Number(process.env._DELAY);
+
+        const events = await getAllEvents();
+        const ad = await createAd(events);
+
+        for(let channelId of channelIds){
+            await sendAd(channelId, ad, delay);
+        }
+    }, 10_000)
 }
