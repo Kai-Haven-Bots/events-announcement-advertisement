@@ -2,13 +2,13 @@ import { GuildTextBasedChannel } from "discord.js";
 import { client } from "..";
 import { getChannel, updateChannel } from "./channelServices";
 
-export const createAd = async (...events: any[]) => {
-    try{
+export const createAd = async (events: any[]) => {
+    try{        
         const header = "**Events for today**\n";
 
         let eventsText = '';
         let i = 0;
-        for(let event of events){
+        for(let event of events){                        
             i++;
             const {name, time, channelId} = event;
 
@@ -41,6 +41,9 @@ export const sendAd = async (channelId: string, ad: string, delay: number) => {
 
                 const previousAd = await channel.messages.fetch(msgId);
                 await previousAd.delete();
+                
+            }else{
+                return;
             }
         }
 

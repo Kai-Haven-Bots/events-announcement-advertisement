@@ -4,6 +4,7 @@ import * as fs from 'fs';
 import { Sequelize } from 'sequelize';
 import { addEvent, getAllEvents } from './services/eventServices';
 import { getChannel, updateChannel } from './services/channelServices';
+import { createAd, sendAd } from './services/adServices';
 
 require('dotenv').config({
     path: path.join(__dirname, ".env")
@@ -41,6 +42,15 @@ export const client = new Client({
 
 client.once('ready', async (client) => {
     console.log("ready");
+
+    // await addEvent({name: 'event 1', channelId: '1107343960642441248', time: Date.now() + 360000})
+    // await addEvent({name: 'event 2', channelId: '1107343960642441248', time: Date.now() + 360000})
+    // await addEvent({name: 'event 3', channelId: '1107343960642441248', time: Date.now() + 360000})
+
+    const allEvents = await getAllEvents();
+    
+    const adText = await createAd(allEvents);
+    sendAd('1107343960642441248', adText, 60_000)
 })
 
 export const errHandler = async (err: any, msg: any) => {
