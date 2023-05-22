@@ -1,5 +1,6 @@
 import { ActionRowBuilder, ButtonInteraction, ModalActionRowComponentBuilder, ModalBuilder, ModalSubmitInteraction, TextInputBuilder, TextInputStyle } from "discord.js"
 import { addEvent, removeEvent } from "./eventServices";
+import { updateAllAds } from "./adServices";
 
 export const create_button = async (int: ButtonInteraction) => {
     try{
@@ -82,7 +83,7 @@ export const create_modal = async (int: ModalSubmitInteraction) => {
             name, channelId, time
         })
         int.reply({ephemeral: true, content: '✅'});
-
+        updateAllAds()
     }catch(err: any){
         console.log("Err on /services/interactionServices.ts/create_modal()");
         console.log(err);
@@ -97,6 +98,7 @@ export const delete_modal = async (int: ModalSubmitInteraction) => {
         await removeEvent({name});
 
         int.reply({ephemeral: true, content: '✅'});
+        updateAllAds()
     }catch(err: any){
         console.log("Err on /services/interactionServices.ts/delete_modal()");
         console.log(err);
