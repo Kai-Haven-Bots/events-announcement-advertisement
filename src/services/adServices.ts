@@ -97,3 +97,30 @@ export const eventsCleaner = async () => {
         console.log(err);
     }
 }
+
+export const updateAllAds = async () => {
+    try{
+        const channels_model = sequelize.model('channels');
+        const all = (await channels_model.findAll()).map(model => {
+            return {channelId: model.dataValues.channelId, msgId: model.dataValues.msgId}
+        })
+
+        const events = await getAllEvents();
+        const ad = await createAd(events);
+
+        for (let one of all){
+            const channel = (await client.channels.fetch(one.channelId)) as GuildTextBasedChannel;
+            try{
+                const msg = await channel.messages.fetch(one.msgId);
+                await msg.edit(ad)
+            }catch(err){
+                console.log(err);
+            }
+            
+        }
+        
+    }catch(err){
+        console.log("Err at /services/adServices.ts/editAllAds()");
+        console.log(err);
+    }
+}

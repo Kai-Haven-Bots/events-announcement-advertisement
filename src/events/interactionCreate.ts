@@ -22,7 +22,6 @@ export const interaction_create_listener = (client: Client) => {
             }else if(interaction.isModalSubmit()){
                 const int = interaction as ModalSubmitInteraction;
                 const customId = int.customId;
-                console.log(customId);
                 
                 if(!customId.startsWith('events-list-ad-modal')) return;
                 

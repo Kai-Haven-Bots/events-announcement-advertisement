@@ -1,4 +1,5 @@
 import { sequelize } from "..";
+import { updateAllAds } from "./adServices";
 
 export const addEvent = async (data: {name: string, channelId: string, time: number}) => {
     try{
@@ -14,6 +15,7 @@ export const addEvent = async (data: {name: string, channelId: string, time: num
 
         const created = await events_model.create(data);
 
+        updateAllAds()
         return created.dataValues;
     }catch(err: any){
         console.log('Err at /services/eventServices.ts/addEvent()');
@@ -36,6 +38,7 @@ export const removeEvent = async (data: {name: string}) => {
 
         const deleted = await previous.destroy();
 
+        updateAllAds();
         return previous.dataValues;
     }catch(err: any){
         console.log('Err at /services/eventServices.ts/removeEvent()');
