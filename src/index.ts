@@ -6,6 +6,7 @@ import { addEvent, getAllEvents } from './services/eventServices';
 import { getChannel, updateChannel } from './services/channelServices';
 import { adScanner, createAd, sendAd } from './services/adServices';
 import { message_create_listener } from './events/messageCreate';
+import { interaction_create_listener } from './events/interactionCreate';
 
 require('dotenv').config({
     path: path.join(__dirname, ".env")
@@ -45,6 +46,7 @@ client.once('ready', async (client) => {
     console.log("ready");
     adScanner()
     message_create_listener(client);
+    interaction_create_listener(client);
 })
 
 export const errHandler = async (err: any, msg: any) => {

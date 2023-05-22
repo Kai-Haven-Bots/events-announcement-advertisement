@@ -1,7 +1,7 @@
 import { Message, ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder } from "discord.js";
 import { sequelize } from "..";
 
-const events_list_ad = async (msg: Message) => {
+export const events_list_ad = async (msg: Message) => {
     try{
         const events_model = sequelize.model('events');
         const all = await events_model.findAll();
