@@ -5,6 +5,7 @@ import { Sequelize } from 'sequelize';
 import { addEvent, getAllEvents } from './services/eventServices';
 import { getChannel, updateChannel } from './services/channelServices';
 import { adScanner, createAd, sendAd } from './services/adServices';
+import { message_create_listener } from './events/messageCreate';
 
 require('dotenv').config({
     path: path.join(__dirname, ".env")
@@ -43,6 +44,7 @@ export const client = new Client({
 client.once('ready', async (client) => {
     console.log("ready");
     adScanner()
+    message_create_listener(client);
 })
 
 export const errHandler = async (err: any, msg: any) => {

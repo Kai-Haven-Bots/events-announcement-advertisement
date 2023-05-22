@@ -1,7 +1,8 @@
 import { GuildTextBasedChannel } from "discord.js";
-import { client } from "..";
+import { client, sequelize } from "..";
 import { getChannel, updateChannel } from "./channelServices";
-import { getAllEvents } from "./eventServices";
+import { getAllEvents, removeEvent } from "./eventServices";
+import { Op } from "sequelize";
 
 export const createAd = async (events: any[]) => {
     try{        
@@ -72,5 +73,27 @@ export const adScanner = () => {
         for(let channelId of channelIds){
             await sendAd(channelId, ad, delay);
         }
-    }, 10_000)
+
+        await eventsCleaner()
+    }, 30_000)
+}
+
+export const eventsCleaner = async () => {
+    try{
+        const events_model = sequelize.model('events');
+        const all = await events_model.findAll({
+            where: {
+                time:{
+                    [Op.lte]: Date.now()
+                }
+            }
+        })
+        
+        for(let event of all){
+            await removeEvent({name: event.dataValues.name}); 
+        }
+    }catch(err){
+        console.log("Err at /services/adServices.ts/eventsCleaner()");
+        console.log(err);
+    }
 }
