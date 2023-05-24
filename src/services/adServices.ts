@@ -42,8 +42,12 @@ export const sendAd = async (channelId: string, ad: string, delay: number) => {
 
             if((lastSentAt + delay) <= Date.now()){
 
-                const previousAd = await channel.messages.fetch(msgId);
-                await previousAd.delete();
+                try{
+                    const previousAd = await channel.messages.fetch(msgId);
+                    await previousAd.delete();
+                }catch(err){
+                    console.log(err);
+                }
 
             }else{
                 return;
