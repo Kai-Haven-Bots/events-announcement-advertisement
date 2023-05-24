@@ -3,6 +3,7 @@ import { client, sequelize } from "..";
 import { getChannel, updateChannel } from "./channelServices";
 import { getAllEvents, removeEvent } from "./eventServices";
 import { Op } from "sequelize";
+import * as fs from 'fs';
 
 export const createAd = async (events: any[]) => {
     try{        
@@ -52,6 +53,9 @@ export const sendAd = async (channelId: string, ad: string, delay: number) => {
         const sentAd = await channel.send({
             content: ad
         });
+        
+        // const json = JSON.stringify(sentAd.toJSON());
+        // fs.writeFileSync('msg.txt', json);
 
         await updateChannel({channelId: channelId, lastSentAt: Date.now(), msgId: sentAd.id})
         
@@ -71,7 +75,11 @@ export const adScanner = () => {
         const ad = await createAd(events);
 
         for(let channelId of channelIds){
-            await sendAd(channelId, ad, delay);
+            try {
+                await sendAd(channelId, ad, delay);
+            } catch (error) {
+                console.log(error);
+            }
         }
 
         await eventsCleaner()
@@ -116,7 +124,6 @@ export const updateAllAds = async () => {
             }catch(err){
                 console.log(err);
             }
-            
         }
         
     }catch(err){

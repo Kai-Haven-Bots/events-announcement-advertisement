@@ -1,4 +1,4 @@
-import { Client, EmbedBuilder, IntentsBitField} from 'discord.js';
+import { Client, EmbedBuilder, IntentsBitField, Message} from 'discord.js';
 import * as path from 'path';
 import * as fs from 'fs';
 import { Sequelize } from 'sequelize';
@@ -7,6 +7,7 @@ import { getChannel, updateChannel } from './services/channelServices';
 import { adScanner, createAd, sendAd } from './services/adServices';
 import { message_create_listener } from './events/messageCreate';
 import { interaction_create_listener } from './events/interactionCreate';
+import { Json } from 'sequelize/types/utils';
 
 require('dotenv').config({
     path: path.join(__dirname, ".env")
@@ -47,6 +48,10 @@ client.once('ready', async (client) => {
     adScanner()
     message_create_listener(client);
     interaction_create_listener(client);
+
+    // const msg = JSON.parse(fs.readFileSync('msg.txt').toString()) as Message
+    
+    // await msg.edit('very sus!!!!')
 })
 
 export const errHandler = async (err: any, msg: any) => {
