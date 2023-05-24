@@ -23,7 +23,7 @@ export const createAd = async (events: any[]) => {
 
         const footer = "\nNITRO UP FOR GRABS";
 
-        return events.length != 0 ? header + eventsText + footer : header + "*# No events listed for today :(*"
+        return events.length != 0 ? header + eventsText + footer : header + "*No events listed for today :(*"
     }catch(err: any){
         console.log('Err at /services/adServices.ts/createAd()');
         console.log(err);
