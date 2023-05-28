@@ -1,7 +1,7 @@
 import { sequelize } from "..";
 import { updateAllAds } from "./adServices";
 
-export const addEvent = async (data: {name: string, channelId: string, time: number}) => {
+export const addEvent = async (data: {name: string, channelId: string, time: number, endingAt: number}) => {
     try{
         const events_model = sequelize.model('events');
 
@@ -13,6 +13,10 @@ export const addEvent = async (data: {name: string, channelId: string, time: num
 
         if(previous) throw new Error('Event already exists!');
 
+        if(Number.isNaN(data.endingAt)) data.endingAt = 0;
+
+        console.log(data);
+        
         const created = await events_model.create(data);
 
         updateAllAds()

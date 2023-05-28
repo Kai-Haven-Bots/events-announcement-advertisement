@@ -13,12 +13,15 @@ export const createAd = async (events: any[]) => {
         let i = 0;
         for(let event of events){                        
             i++;
-            const {name, time, channelId} = event;
+            const {name, time, channelId, endingAt} = event;
 
             const timeText = (time + "");
-            const timeTemplate  = timeText.slice(0, timeText.length - 3);
+            let timeTemplate  = "<t:" + timeText.slice(0, timeText.length - 3) + ":R>";
 
-            eventsText += `${i}. **${name}** event at <#${channelId}> <t:${timeTemplate}:R> \n`
+            const current = Date.now();
+            if(current>= time && endingAt>current) timeTemplate = ":arrow_left: :warning:**HAPPENING NOW**:warning:";
+
+            eventsText += `${i}. **${name}** event at <#${channelId}> ${timeTemplate} \n`
         }
 
         const footer = "\nNITRO UP FOR GRABS";
@@ -87,6 +90,11 @@ export const adScanner = () => {
         }
 
         await eventsCleaner()
+
+        setTimeout(async () => {
+            await updateAllAds()
+        }, 10_000)
+
     }, 30_000)
 }
 
@@ -102,7 +110,15 @@ export const eventsCleaner = async () => {
         })
         
         for(let event of all){
-            await removeEvent({name: event.dataValues.name}); 
+            const {name, endingAt} = event.dataValues;
+            
+            if(endingAt === 0){
+                await removeEvent({name}); 
+            }else if(Date.now() >= endingAt){
+                console.log(`now: ${Date.now()} endingAt: ${endingAt} now>endingAt: ${Date.now() > endingAt}`);
+                
+                await removeEvent({name}); 
+            }
         }
     }catch(err){
         console.log("Err at /services/adServices.ts/eventsCleaner()");

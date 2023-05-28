@@ -8,6 +8,9 @@ export const model = (sequelize: Sequelize) => {
         time: {
             type: INTEGER
         },
+        endingAt: {
+            type: INTEGER
+        },
         channelId: {
             type: CHAR(25)
         }

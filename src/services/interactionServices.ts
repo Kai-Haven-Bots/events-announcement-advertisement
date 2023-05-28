@@ -18,9 +18,16 @@ export const create_button = async (int: ButtonInteraction) => {
         
         const delayInput = new TextInputBuilder()
             .setCustomId('events-list-ad-input-create-time')
-            .setLabel('how long till the event')
+            .setLabel('how long till the event starts?')
             .setRequired(true)
             .setPlaceholder('Enter in mintues! e.g. 15')
+            .setStyle(TextInputStyle.Short);
+
+        const endingInput = new TextInputBuilder()
+            .setCustomId('events-list-ad-input-create-ending')
+            .setLabel('how long till the event ends?')
+            .setRequired(false)
+            .setPlaceholder('Not required, only for "Happening now" events')
             .setStyle(TextInputStyle.Short);
 
         const channelIdInput = new TextInputBuilder()
@@ -34,8 +41,9 @@ export const create_button = async (int: ButtonInteraction) => {
         const nameRow = new ActionRowBuilder<ModalActionRowComponentBuilder>().addComponents(nameInput);
         const delayRow = new ActionRowBuilder<ModalActionRowComponentBuilder>().addComponents(delayInput);
         const channelIdRow = new ActionRowBuilder<ModalActionRowComponentBuilder>().addComponents(channelIdInput);
-        
-        modal.addComponents(nameRow, delayRow, channelIdRow);
+        const endingRow = new ActionRowBuilder<ModalActionRowComponentBuilder>().addComponents(endingInput);
+
+        modal.addComponents(nameRow, delayRow, channelIdRow, endingRow);
 
         await int.showModal(modal);
 
@@ -78,9 +86,14 @@ export const create_modal = async (int: ModalSubmitInteraction) => {
         const name = int.fields.getTextInputValue('events-list-ad-input-create-name').trim().replaceAll(" ", '-');
         let time = (Number(int.fields.getTextInputValue('events-list-ad-input-create-time')) * 60_000) + Date.now();
         const channelId = int.fields.getTextInputValue('events-list-ad-input-create-channelId');
+        let ending = (Number(int.fields.getTextInputValue('events-list-ad-input-create-ending')) * 60_000) + Date.now()
+
+        if(int.fields.getTextInputValue('events-list-ad-input-create-ending') === '') ending = NaN;
+        if(Number.isNaN(time)) throw new Error('Invalid event starting time'); 
+        console.log(int.fields.getTextInputValue('events-list-ad-input-create-ending'));
         
         await addEvent({
-            name, channelId, time
+            name, channelId, time, endingAt: ending
         })
         int.reply({ephemeral: true, content: '✅'});
         updateAllAds()
