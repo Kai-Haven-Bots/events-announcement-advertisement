@@ -111,12 +111,9 @@ export const eventsCleaner = async () => {
         
         for(let event of all){
             const {name, endingAt} = event.dataValues;
-            
             if(endingAt === 0){
                 await removeEvent({name}); 
             }else if(Date.now() >= endingAt){
-                console.log(`now: ${Date.now()} endingAt: ${endingAt} now>endingAt: ${Date.now() > endingAt}`);
-                
                 await removeEvent({name}); 
             }
         }

@@ -15,7 +15,6 @@ export const addEvent = async (data: {name: string, channelId: string, time: num
 
         if(Number.isNaN(data.endingAt)) data.endingAt = 0;
 
-        console.log(data);
         
         const created = await events_model.create(data);
 

@@ -90,7 +90,6 @@ export const create_modal = async (int: ModalSubmitInteraction) => {
 
         if(int.fields.getTextInputValue('events-list-ad-input-create-ending') === '') ending = NaN;
         if(Number.isNaN(time)) throw new Error('Invalid event starting time'); 
-        console.log(int.fields.getTextInputValue('events-list-ad-input-create-ending'));
         
         await addEvent({
             name, channelId, time, endingAt: ending
