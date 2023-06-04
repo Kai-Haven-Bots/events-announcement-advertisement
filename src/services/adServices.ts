@@ -6,34 +6,46 @@ import { Op } from "sequelize";
 import * as fs from 'fs';
 
 export const createAd = async (events: any[]) => {
-    try{        
-        const header = "**Events for today**\n\n";
+    try {
+      const header = "## Events for today\n\n";
+      let happeningNowText = "**HAPPENING NOW**\n\n";
+      let upcomingEventsText = "**UPCOMING EVENTS**\n\n";
+      const happening_now = "`🟢 Happening Now`"
 
-        let eventsText = '';
-        let i = 0;
-        for(let event of events){                        
-            i++;
-            const {name, time, channelId, endingAt} = event;
-
-            const timeText = (time + "");
-            let timeTemplate  = "<t:" + timeText.slice(0, timeText.length - 3) + ":R>";
-
-            const current = Date.now();
-            if(current>= time && endingAt>current) timeTemplate = ":arrow_left: :warning:**HAPPENING NOW**:warning:";
-
-            eventsText += `${i}. **${name}** event at <#${channelId}> ${timeTemplate} \n`
+      let happeningNowCount = 0;
+      let upcomingEventsCount = 0;
+  
+      const current = Date.now();
+  
+      for (let event of events) {
+        const { name, time, channelId, endingAt } = event;
+  
+        if (current >= time && endingAt > current) {
+          happeningNowCount++;
+          happeningNowText += `- ${name} event at <#${channelId}> ${happening_now}\n`;
+        } else {
+          upcomingEventsCount++;
+          const timeText = time.toString();
+          const timeTemplate = `<t:${Math.floor(timeText / 1000)}:R>`;
+          upcomingEventsText += `- ${name} event at <#${channelId}> ${timeTemplate}\n`;
         }
-
-        const footer = "\nNITRO UP FOR GRABS";
-
-        return events.length != 0 ? header + eventsText + footer : header + "*No events listed for today :(*"
-    }catch(err: any){
-        console.log('Err at /services/adServices.ts/createAd()');
-        console.log(err);
-        throw new Error(err.message);
+      }
+  
+      const footer = "\n-----------------------\nNITRO UP FOR GRABS";
+  
+      let adText = header;
+      adText += happeningNowCount > 0 ? happeningNowText + "\n" : "";
+      adText += upcomingEventsCount > 0 ? upcomingEventsText + "\n" : "";
+      adText += footer;
+  
+      return adText !== header ? adText : header + "*No events listed for today :(*";
+    } catch (err: any) {
+      console.log('Err at /services/adServices.ts/createAd()');
+      console.log(err);
+      throw new Error(err.message);
     }
-}
-
+  };
+  
 export const sendAd = async (channelId: string, ad: string, delay: number) => {
     try{
         const channel = ( await client.channels.fetch(channelId) ) as GuildTextBasedChannel;
