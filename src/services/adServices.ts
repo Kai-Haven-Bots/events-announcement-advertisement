@@ -92,6 +92,7 @@ export const adScanner = () => {
 
         const events = await getAllEvents();
         const ad = await createAd(events);
+        if(ad.includes("*No events listed for today :(*")) return;
 
         for(let channelId of channelIds){
             try {
@@ -144,6 +145,7 @@ export const updateAllAds = async () => {
 
         const events = await getAllEvents();
         const ad = await createAd(events);
+        if(ad.includes("*No events listed for today :(*")) return;
 
         for (let one of all){
             const channel = (await client.channels.fetch(one.channelId)) as GuildTextBasedChannel;
